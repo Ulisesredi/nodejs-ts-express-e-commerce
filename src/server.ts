@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import { UserRouter } from "./router/user.router";
 
 class Server {
   public app: express.Application = express();
@@ -13,10 +14,14 @@ class Server {
     this.app.use(morgan("dev"));
     this.app.use(cors());
 
-    this.app.get("/api/hello", (req, res) => {
-      res.status(200).json({ message: "Hello World!!!" });
-    });
+    this.app.use("/api", this.routers());
+
     this.listen();
+  }
+
+  routers(): Array<express.Router> {
+    const userRouter = new UserRouter().router;
+    return [userRouter];
   }
 
   public listen() {
