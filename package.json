@@ -1,7 +1,7 @@
 {
-  "name": "NodeJS-POC",
+  "name": "nodejs-ts-express-e-commerce",
   "version": "1.0.0",
-  "description": "A POC project on NodeJS + TS to refresh some backend concepts",
+  "description": "Node.js TypeScript Express E-Commerce",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
@@ -12,7 +12,7 @@
     "express": "^4.21.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "typeorm": "^0.3.20",
+    "typeorm": "0.3.6",
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "^5.6.3"
   },
