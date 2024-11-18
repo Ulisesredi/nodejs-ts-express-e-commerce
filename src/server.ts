@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 import { ConfigServer } from "./config/config";
-import { Connection, createConnection, DataSource } from "typeorm";
+
 import { UserRouter } from "./user/user.router";
 
 class Server extends ConfigServer {
@@ -29,10 +29,6 @@ class Server extends ConfigServer {
   routers(): Array<express.Router> {
     const userRouter = new UserRouter().router;
     return [userRouter];
-  }
-
-  async dbConnect(): Promise<Connection> {
-    return await createConnection(this.typeORMConfig);
   }
 
   public listen() {

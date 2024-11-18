@@ -1,5 +1,10 @@
 import * as dotenv from "dotenv";
-import { ConnectionOptions, DataSourceOptions } from "typeorm";
+import {
+  Connection,
+  ConnectionOptions,
+  createConnection,
+  DataSourceOptions,
+} from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 export abstract class ConfigServer {
@@ -45,5 +50,9 @@ export abstract class ConfigServer {
       logging: false,
       namingStrategy: new SnakeNamingStrategy(),
     };
+  }
+
+  async dbConnect(): Promise<Connection> {
+    return await createConnection(this.typeORMConfig);
   }
 }
