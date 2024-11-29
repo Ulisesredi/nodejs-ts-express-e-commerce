@@ -5,6 +5,7 @@ import cors from "cors";
 import { ConfigServer } from "./config/config";
 
 import { UserRouter } from "./user/user.router";
+import { CustomerRouter } from "./customer/customer.router";
 
 class Server extends ConfigServer {
   public app: express.Application = express();
@@ -28,7 +29,8 @@ class Server extends ConfigServer {
 
   routers(): Array<express.Router> {
     const userRouter = new UserRouter().router;
-    return [userRouter];
+    const customerRouter = new CustomerRouter().router;
+    return [userRouter, customerRouter];
   }
 
   public listen() {

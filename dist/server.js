@@ -8,6 +8,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = require("./config/config");
 const user_router_1 = require("./user/user.router");
+const customer_router_1 = require("./customer/customer.router");
 class Server extends config_1.ConfigServer {
     constructor() {
         super();
@@ -23,7 +24,8 @@ class Server extends config_1.ConfigServer {
     }
     routers() {
         const userRouter = new user_router_1.UserRouter().router;
-        return [userRouter];
+        const customerRouter = new customer_router_1.CustomerRouter().router;
+        return [userRouter, customerRouter];
     }
     listen() {
         this.app.listen(this.port, () => {
