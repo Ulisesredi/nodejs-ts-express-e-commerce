@@ -7,6 +7,7 @@ import { ConfigServer } from "./config/config";
 import { UserRouter } from "./user/user.router";
 import { CustomerRouter } from "./customer/customer.router";
 import { ProductRouter } from "./product/product.router";
+import { CategoryRouter } from "./category/category.router";
 
 class Server extends ConfigServer {
   public app: express.Application = express();
@@ -32,7 +33,8 @@ class Server extends ConfigServer {
     const userRouter = new UserRouter().router;
     const customerRouter = new CustomerRouter().router;
     const productRouter = new ProductRouter().router;
-    return [userRouter, customerRouter, productRouter];
+    const categoryRouter = new CategoryRouter().router;
+    return [userRouter, customerRouter, productRouter, categoryRouter];
   }
 
   public listen() {

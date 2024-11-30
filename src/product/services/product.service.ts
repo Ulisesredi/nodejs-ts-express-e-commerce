@@ -6,7 +6,7 @@ import { ProductEntity } from "../entities/product.entity";
 
 export class ProductService extends BaseService<ProductEntity> {
   constructor() {
-    super(CustomerEntity);
+    super(ProductEntity);
   }
 
   async getProducts(): Promise<ProductEntity[]> {

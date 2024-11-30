@@ -25,7 +25,7 @@ export class CustomerController {
   }
   async createCustomer(req: Request, res: Response) {
     try {
-      const data = this.customerService.createCustomer(req.body);
+      const data = await this.customerService.createCustomer(req.body);
       res.status(200).json(data);
     } catch (error) {
       console.log(error);
