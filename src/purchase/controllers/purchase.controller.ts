@@ -72,7 +72,7 @@ export class PurchaseController {
       if (!data.affected) {
         this.httpResponse.NotFound(
           res,
-          `Couldn't find customer with id: ${id}`
+          `Couldn't find purchase with id: ${id}`
         );
         return;
       }

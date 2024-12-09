@@ -3,9 +3,11 @@ import {
   Connection,
   ConnectionOptions,
   createConnection,
+  DataSource,
   DataSourceOptions,
 } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import { AppDataSource } from "./data.source";
 
 export abstract class ConfigServer {
   constructor() {
@@ -36,23 +38,7 @@ export abstract class ConfigServer {
     return "." + arrEnv.join(".");
   }
 
-  public get typeORMConfig(): DataSourceOptions {
-    return {
-      type: "mysql",
-      host: this.getEnvironment("DB_HOST"),
-      port: this.getNumberEnvironment("DB_PORT"),
-      username: this.getEnvironment("DB_USER"),
-      password: this.getEnvironment("DB_PASSWORD"),
-      database: this.getEnvironment("DB_DATABASE"),
-      entities: [__dirname + "/../**/*.entity{.ts,.js}"],
-      migrations: [__dirname + "/../../migrations/*{.ts,.js}"],
-      synchronize: false,
-      logging: false,
-      namingStrategy: new SnakeNamingStrategy(),
-    };
-  }
-
-  async dbConnect(): Promise<Connection> {
-    return await createConnection(this.typeORMConfig);
+  get initConnection(): Promise<DataSource> {
+    return AppDataSource.initialize();
   }
 }

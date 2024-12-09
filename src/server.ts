@@ -10,6 +10,7 @@ import { ProductRouter } from "./product/product.router";
 import { CategoryRouter } from "./category/category.router";
 import { PurchaseRouter } from "./purchase/purchase.router";
 import { PurchaseProductRouter } from "./purchase/purchase-product.router";
+import { DataSource } from "typeorm";
 
 class Server extends ConfigServer {
   public app: express.Application = express();
@@ -20,11 +21,10 @@ class Server extends ConfigServer {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-
-    this.dbConnect();
-
     this.app.use(morgan("dev"));
     this.app.use(cors());
+
+    this.dbConnect();
 
     this.app.use("/api", this.routers());
 
@@ -32,20 +32,24 @@ class Server extends ConfigServer {
   }
 
   routers(): Array<express.Router> {
-    const userRouter = new UserRouter().router;
-    const customerRouter = new CustomerRouter().router;
-    const productRouter = new ProductRouter().router;
-    const categoryRouter = new CategoryRouter().router;
-    const purchaseRouter = new PurchaseRouter().router;
-    const purchaseProductRouter = new PurchaseProductRouter().router;
     return [
-      purchaseRouter,
-      userRouter,
-      customerRouter,
-      productRouter,
-      categoryRouter,
-      purchaseProductRouter,
+      new UserRouter().router,
+      new CustomerRouter().router,
+      new ProductRouter().router,
+      new CategoryRouter().router,
+      new PurchaseRouter().router,
+      new PurchaseProductRouter().router,
     ];
+  }
+
+  async dbConnect(): Promise<DataSource | void> {
+    return this.initConnection
+      .then(() => {
+        console.log("Connection succeeded");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   public listen() {
