@@ -12,6 +12,7 @@
     "express": "^4.21.1",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "reflect-metadata": "^0.2.2",
     "typeorm": "0.3.6",
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "^5.6.3"
@@ -21,11 +22,15 @@
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "concurrently": "^9.1.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2"
   },
   "scripts": {
     "start": "tsc && node dist/server.js",
     "start:dev": "tsc && concurrently \"tsc -w\" \"nodemon dist/server.js\"",
-    "start:prod": "SET NODE_ENV=production && yarn start"
+    "start:prod": "SET NODE_ENV=production && yarn start",
+    "typeorm": "typeorm-ts-node-commonjs -d ./src/config/data.source.ts",
+    "migrations:gen": "yarn typeorm migration:generate",
+    "migrations:run": "yarn typeorm migration:run"
   }
 }
