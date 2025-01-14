@@ -35,6 +35,20 @@ export class ProductController {
       this.httpResponse.Error(res, error);
     }
   }
+  async getProductWithRelationById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const data = await this.productService.findProductWithRelations(id);
+      if (!data) {
+        this.httpResponse.NotFound(res, `Couldn't find product with id: ${id}`);
+        return;
+      }
+      this.httpResponse.Ok(res, data);
+    } catch (error) {
+      console.log("ERROR: " + error);
+      this.httpResponse.Error(res, error);
+    }
+  }
   async createProduct(req: Request, res: Response) {
     try {
       const data = await this.productService.createProduct(req.body);
