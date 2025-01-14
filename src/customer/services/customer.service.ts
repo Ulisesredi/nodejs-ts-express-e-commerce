@@ -16,6 +16,14 @@ export class CustomerService extends BaseService<CustomerEntity> {
     return (await this.execRepository).findOneBy({ id });
   }
 
+  async findCustomerWithRelations(id: string): Promise<CustomerEntity | null> {
+    return (await this.execRepository)
+      .createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.user", "user")
+      .where({ id })
+      .getOne();
+  }
+
   async createCustomer(dataset: CustomerDTO): Promise<CustomerEntity> {
     return (await this.execRepository).save(dataset);
   }

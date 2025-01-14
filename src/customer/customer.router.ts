@@ -13,6 +13,9 @@ export class CustomerRouter extends BaseRouter<CustomerController> {
     this.router.get("/customer/:id", (req, res) =>
       this.controller.getCustomerById(req, res)
     );
+    this.router.get("/customerRel/:id", (req, res) =>
+      this.controller.getCustomerWithRelationById(req, res)
+    );
     this.router.post("/createCustomer", (req, res) =>
       this.controller.createCustomer(req, res)
     );
