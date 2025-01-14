@@ -35,6 +35,20 @@ export class UserController {
       this.httpResponse.Error(res, error);
     }
   }
+  async getUserWithRelationById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const data = await this.userService.findUserWithRelations(id);
+      if (!data) {
+        this.httpResponse.NotFound(res, `Couldn't find user with id: ${id}`);
+        return;
+      }
+      this.httpResponse.Ok(res, data);
+    } catch (error) {
+      console.error("ERROR: " + error);
+      this.httpResponse.Error(res, error);
+    }
+  }
   async createUser(req: Request, res: Response) {
     try {
       const data = await this.userService.createUser(req.body);
