@@ -14,6 +14,9 @@ export class PurchaseRouter extends BaseRouter<PurchaseController> {
     this.router.get("/purchase/:id", (req, res) =>
       this.controller.getPurchaseById(req, res)
     );
+    this.router.get("/purchaseRel/:id", (req, res) =>
+      this.controller.getPurchaseWithRelationById(req, res)
+    );
     this.router.post("/createPurchase", (req, res) =>
       this.controller.createPurchase(req, res)
     );

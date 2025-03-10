@@ -4,13 +4,13 @@ import { HttpResponse } from "../../shared/response/http.response";
 
 export class PurchaseController {
   constructor(
-    private readonly productService: PurchaseService = new PurchaseService(),
+    private readonly purchaseService: PurchaseService = new PurchaseService(),
     private readonly httpResponse: HttpResponse = new HttpResponse()
   ) {}
 
-  async getPurchases(req: Request, res: Response) {
+  async getPurchases(_: Request, res: Response) {
     try {
-      const data = await this.productService.getPurchases();
+      const data = await this.purchaseService.getPurchases();
       if (!data) {
         this.httpResponse.Ok(res, []);
         return;
@@ -24,7 +24,24 @@ export class PurchaseController {
   async getPurchaseById(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const data = await this.productService.getPurchaseById(id);
+      const data = await this.purchaseService.getPurchaseById(id);
+      if (!data) {
+        this.httpResponse.NotFound(
+          res,
+          `Couldn't find purchase with id: ${id}`
+        );
+        return;
+      }
+      this.httpResponse.Ok(res, data);
+    } catch (error) {
+      console.log("ERROR: " + error);
+      this.httpResponse.Error(res, error);
+    }
+  }
+  async getPurchaseWithRelationById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const data = await this.purchaseService.findPurchaseWithRelations(id);
       if (!data) {
         this.httpResponse.NotFound(
           res,
@@ -40,7 +57,7 @@ export class PurchaseController {
   }
   async createPurchase(req: Request, res: Response) {
     try {
-      const data = await this.productService.createPurchase(req.body);
+      const data = await this.purchaseService.createPurchase(req.body);
       this.httpResponse.Ok(res, data);
     } catch (error) {
       console.log("ERROR: " + error);
@@ -50,7 +67,7 @@ export class PurchaseController {
   async updatePurchase(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const data = await this.productService.updatePurchase(id, req.body);
+      const data = await this.purchaseService.updatePurchase(id, req.body);
       if (!data.affected) {
         this.httpResponse.NotFound(
           res,
@@ -68,7 +85,7 @@ export class PurchaseController {
   async deletePurchase(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const data = await this.productService.deletePurchase(id);
+      const data = await this.purchaseService.deletePurchase(id);
       if (!data.affected) {
         this.httpResponse.NotFound(
           res,
