@@ -2,6 +2,8 @@ import { DeleteResult, UpdateResult } from "typeorm";
 import { BaseService } from "../../config/base.service";
 import { CustomerEntity } from "../entities/customer.entity";
 import { CustomerDTO } from "../dto/customer.dto";
+import { AppDataSource } from "../../config/data.source";
+import { UserEntity } from "../../user/entities/user.entity";
 
 export class CustomerService extends BaseService<CustomerEntity> {
   constructor() {
@@ -25,7 +27,20 @@ export class CustomerService extends BaseService<CustomerEntity> {
   }
 
   async createCustomer(dataset: CustomerDTO): Promise<CustomerEntity> {
-    return (await this.execRepository).save(dataset);
+    const { userId, ...customerData } = dataset;
+
+    const userRepository = AppDataSource.getRepository(UserEntity);
+
+    const user = await userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    const customer = new CustomerEntity();
+    Object.assign(customer, customerData);
+    customer.user = user;
+
+    return (await this.execRepository).save(customer);
   }
 
   async deleteCustomer(id: string): Promise<DeleteResult> {
