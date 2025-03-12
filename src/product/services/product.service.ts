@@ -2,6 +2,8 @@ import { DeleteResult, UpdateResult } from "typeorm";
 import { BaseService } from "../../config/base.service";
 import { ProductDTO } from "../dto/product.dto";
 import { ProductEntity } from "../entities/product.entity";
+import { CategoryEntity } from "../../category/entities/category.entity";
+import { AppDataSource } from "../../config/data.source";
 
 export class ProductService extends BaseService<ProductEntity> {
   constructor() {
@@ -24,7 +26,20 @@ export class ProductService extends BaseService<ProductEntity> {
       .getOne();
   }
   async createProduct(dataset: ProductDTO): Promise<ProductEntity> {
-    return (await this.execRepository).save(dataset);
+    const { categoryId, ...productData } = dataset;
+
+    const categoryRepository = AppDataSource.getRepository(CategoryEntity);
+
+    const category = await categoryRepository.findOneBy({ id: categoryId });
+    if (!category) {
+      throw new Error(`Category with id ${categoryId} not found`);
+    }
+
+    const product = new ProductEntity();
+    Object.assign(product, productData);
+    product.category = category;
+
+    return (await this.execRepository).save(product);
   }
   async deleteProduct(id: string): Promise<DeleteResult> {
     return (await this.execRepository).delete(id);
