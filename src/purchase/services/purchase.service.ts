@@ -3,10 +3,12 @@ import { BaseService } from "../../config/base.service";
 import { PurchaseEntity } from "../entities/purchase.entity";
 import { PurchaseDTO } from "../dto/purchase.dto";
 import { CustomerEntity } from "../../customer/entities/customer.entity";
-import { AppDataSource } from "../../config/data.source";
+import { CustomerService } from "../../customer/services/customer.service";
 
 export class PurchaseService extends BaseService<PurchaseEntity> {
-  constructor() {
+  constructor(
+    private readonly customerService: CustomerService = new CustomerService()
+  ) {
     super(PurchaseEntity);
   }
 
@@ -29,9 +31,7 @@ export class PurchaseService extends BaseService<PurchaseEntity> {
   async createPurchase(dataset: PurchaseDTO): Promise<PurchaseEntity> {
     const { customerId, ...purchaseData } = dataset;
 
-    const customerRepository = AppDataSource.getRepository(CustomerEntity);
-
-    const customer = await customerRepository.findOneBy({ id: customerId });
+    const customer = await this.customerService.getCustomerById(customerId);
     if (!customer) {
       throw new Error(`Customer with id ${customerId} not found`);
     }
