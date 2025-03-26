@@ -15,26 +15,26 @@ export class AuthService extends ConfigServer {
 
   /**
    * validateUser
-   * @param identifier username or email
+   * @param username username or email
    * @param password
    */
   public async validateUser(
-    identifier: string,
+    username: string,
     password: string
   ): Promise<UserEntity | null> {
-    const userByEmail = await this.userService.findUserByEmail(identifier);
-    const userByUsername = await this.userService.findUserByUsername(
-      identifier
-    );
+    const userByEmail = await this.userService.findUserByEmail(username);
+    const userByUsername = await this.userService.findUserByUsername(username);
 
     if (userByUsername) {
       const isMatch = await bcrypt.compare(password, userByUsername.password);
+
       if (isMatch) {
         return userByUsername;
       }
     }
     if (userByEmail) {
       const isMatch = await bcrypt.compare(password, userByEmail.password);
+
       if (isMatch) {
         return userByEmail;
       }
@@ -44,7 +44,7 @@ export class AuthService extends ConfigServer {
   }
 
   sign(payload: jwt.JwtPayload, secret: any) {
-    return this.jwtInstance.sign(payload, secret);
+    return this.jwtInstance.sign(payload, secret, { expiresIn: "1h" });
   }
 
   public async generateJWT(

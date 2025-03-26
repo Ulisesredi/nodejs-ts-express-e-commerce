@@ -12,6 +12,9 @@ import { CategoryRouter } from "./category/category.router";
 import { PurchaseRouter } from "./purchase/purchase.router";
 import { PurchaseProductRouter } from "./purchase/purchase-product.router";
 import { DataSource } from "typeorm";
+import { LoginStrategy } from "./auth/strategies/login.strategy";
+import { JwtStrategy } from "./auth/strategies/jwt.strategy";
+import { AuthRouter } from "./auth/auth.router";
 
 class Server extends ConfigServer {
   public app: express.Application = express();
@@ -25,10 +28,11 @@ class Server extends ConfigServer {
     this.app.use(morgan("dev"));
     this.app.use(cors());
 
+    this.passportUse();
+
     this.dbConnect();
 
     this.app.use("/api", this.routers());
-
     this.listen();
   }
 
@@ -40,7 +44,12 @@ class Server extends ConfigServer {
       new CategoryRouter().router,
       new PurchaseRouter().router,
       new PurchaseProductRouter().router,
+      new AuthRouter().router,
     ];
+  }
+
+  passportUse() {
+    return [new LoginStrategy().use, new JwtStrategy().use];
   }
 
   async dbConnect(): Promise<DataSource | void> {
