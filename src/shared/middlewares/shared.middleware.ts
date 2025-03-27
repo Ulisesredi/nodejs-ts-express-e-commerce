@@ -30,9 +30,10 @@ export class SharedMiddleware {
   checkAdminRole(req: Request, res: Response, next: NextFunction) {
     const user = req.user as UserEntity;
     if (user.role !== RoleType.Admin) {
-      return this.httpResponse.Unauthorized(res, "Unauthorized.");
+      this.httpResponse.Unauthorized(res, "Admin role required.");
+      return;
     }
 
-    return next();
+    next();
   }
 }
