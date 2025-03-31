@@ -22,14 +22,22 @@ export class ProductRouter extends BaseRouter<
     );
     this.router.post(
       "/products",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
       (req, res, next) => this.middleware.productValidator(req, res, next),
       (req, res) => this.controller.createProduct(req, res)
     );
-    this.router.patch("/products/:id", (req, res) =>
-      this.controller.updateProduct(req, res)
+    this.router.patch(
+      "/products/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.updateProduct(req, res)
     );
-    this.router.delete("/products/:id", (req, res) =>
-      this.controller.deleteProduct(req, res)
+    this.router.delete(
+      "/products/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.deleteProduct(req, res)
     );
   }
 }

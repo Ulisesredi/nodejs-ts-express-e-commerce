@@ -11,22 +11,36 @@ export class CategoryRouter extends BaseRouter<
   }
 
   routes(): void {
-    this.router.get("/categories", (req, res) =>
-      this.controller.getCategories(req, res)
+    this.router.get(
+      "/categories",
+      this.middleware.passAuth("jwt"),
+
+      (req, res) => this.controller.getCategories(req, res)
     );
-    this.router.get("/categories/:id", (req, res) =>
-      this.controller.getCategoryById(req, res)
+    this.router.get(
+      "/categories/:id",
+      this.middleware.passAuth("jwt"),
+
+      (req, res) => this.controller.getCategoryById(req, res)
     );
     this.router.post(
       "/categories",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
       (req, res, next) => this.middleware.categoryValidator(req, res, next),
       (req, res) => this.controller.createCategory(req, res)
     );
-    this.router.patch("/categories/:id", (req, res) =>
-      this.controller.updateCategory(req, res)
+    this.router.patch(
+      "/categories/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.updateCategory(req, res)
     );
-    this.router.delete("/categories/:id", (req, res) =>
-      this.controller.deleteCategory(req, res)
+    this.router.delete(
+      "/categories/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.deleteCategory(req, res)
     );
   }
 }

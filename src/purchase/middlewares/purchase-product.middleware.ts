@@ -4,11 +4,12 @@ import { validate } from "class-validator";
 import { HttpResponse } from "../../shared/response/http.response";
 
 import { PurchaseProductDTO } from "../dto/purchase-product.dto";
+import { SharedMiddleware } from "../../shared/middlewares/shared.middleware";
 
-export class PurchaseProductMiddleware {
-  constructor(
-    private readonly httpResponse: HttpResponse = new HttpResponse()
-  ) {}
+export class PurchaseProductMiddleware extends SharedMiddleware {
+  constructor() {
+    super();
+  }
 
   purchaseProductValidator(req: Request, res: Response, next: NextFunction) {
     const { totalPrice, productQty, productId, purchaseId } = req.body;

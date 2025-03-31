@@ -11,23 +11,34 @@ export class PurchaseProductRouter extends BaseRouter<
   }
 
   routes(): void {
-    this.router.get("/purchaseProducts", (req, res) =>
-      this.controller.getPurchaseProducts(req, res)
+    this.router.get(
+      "/purchaseProducts",
+      this.middleware.passAuth("jwt"),
+      (req, res) => this.controller.getPurchaseProducts(req, res)
     );
-    this.router.get("/purchaseProducts/:id", (req, res) =>
-      this.controller.getPurchaseProductById(req, res)
+    this.router.get(
+      "/purchaseProducts/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res) => this.controller.getPurchaseProductById(req, res)
     );
     this.router.post(
       "/purchaseProducts",
+      this.middleware.passAuth("jwt"),
       (req, res, next) =>
         this.middleware.purchaseProductValidator(req, res, next),
       (req, res) => this.controller.createPurchaseProduct(req, res)
     );
-    this.router.patch("/purchaseProducts/:id", (req, res) =>
-      this.controller.updatePurchaseProduct(req, res)
+    this.router.patch(
+      "/purchaseProducts/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.updatePurchaseProduct(req, res)
     );
-    this.router.delete("/purchaseProducts/:id", (req, res) =>
-      this.controller.deletePurchaseProduct(req, res)
+    this.router.delete(
+      "/purchaseProducts/:id",
+      this.middleware.passAuth("jwt"),
+      (req, res, next) => this.middleware.checkAdminRole(req, res, next),
+      (req, res) => this.controller.deletePurchaseProduct(req, res)
     );
   }
 }
