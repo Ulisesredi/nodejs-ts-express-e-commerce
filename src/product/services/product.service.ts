@@ -20,11 +20,10 @@ export class ProductService extends BaseService<ProductEntity> {
   }
 
   async findProductWithRelations(id: string): Promise<ProductEntity | null> {
-    return (await this.execRepository)
-      .createQueryBuilder("product")
-      .leftJoinAndSelect("product.category", "category")
-      .where({ id })
-      .getOne();
+    return (await this.execRepository).findOne({
+      where: { id },
+      relations: ["category"],
+    });
   }
   async createProduct(dataset: ProductDTO): Promise<ProductEntity> {
     const { categoryId, ...productData } = dataset;
