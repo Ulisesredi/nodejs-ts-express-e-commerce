@@ -1,16 +1,30 @@
-version: "3.1"
-
 services:
-  uredi_msql_db:
+  node_ts_express_db:
     image: mysql:5.7
+    container_name: node_ts_express_api_msql_db
+    restart: always
     volumes:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     command: --init-file /docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: uredi_msql_db
-      MYSQL_ROOT_USER: uredi
-      MYSQL_USER: uredi
-      MYSQL_ROOT_PASSWORD: secret_pwd
+      MYSQL_DATABASE: node_ts_express_api_msql_db
+      MYSQL_USER: user
       MYSQL_PASSWORD: secret_pwd
+      MYSQL_ROOT_PASSWORD: secret_pwd
+
+  api:
+    build: .
+    container_name: node_ts_express_api
+    restart: always
+    depends_on:
+      - node_ts_express_db
+    environment:
+      DB_HOST: node_ts_express_api_msql_db
+      DB_PORT: 3306
+      DB_USER: user
+      DB_PASSWORD: secret_pwd
+      DB_DATABASE: node_ts_express_api_msql_db
+    ports:
+      - "8000:8000"
