@@ -19,21 +19,28 @@ export class PurchaseProductService extends BaseService<PurchaseProductEntity> {
   async getPurchaseProductById(
     id: string
   ): Promise<PurchaseProductEntity | null> {
-    return (await this.execRepository).findOneBy({ id });
+    return (await this.execRepository).findOne({
+      where: { id },
+      relations: ["product"],
+    });
   }
   async createPurchaseProduct(
     dataset: PurchaseProductDTO
   ): Promise<PurchaseProductEntity> {
-    const newPurchaseProduct = (await this.execRepository).create(dataset);
+    const { productId, ...purchaseProductData } = dataset;
 
-    const product = await this.productService.getProductById(
-      newPurchaseProduct.product.id
-    );
+    const product = await this.productService.getProductById(productId);
 
-    newPurchaseProduct.totalPrice =
-      newPurchaseProduct.productQty * product!.price;
+    if (!product) {
+      throw new Error(`Product with id ${productId} not found`);
+    }
 
-    return (await this.execRepository).save(newPurchaseProduct);
+    const purchaseProduct = new PurchaseProductEntity();
+    Object.assign(purchaseProduct, purchaseProductData);
+    purchaseProduct.product = product;
+    purchaseProduct.totalPrice = dataset.productQty * product.price;
+
+    return (await this.execRepository).save(purchaseProduct);
   }
 
   async deletePurchaseProduct(id: string): Promise<DeleteResult> {
@@ -41,8 +48,27 @@ export class PurchaseProductService extends BaseService<PurchaseProductEntity> {
   }
   async updatePurchaseProduct(
     id: string,
-    dataset: ProductDTO
+    dataset: PurchaseProductDTO
   ): Promise<UpdateResult> {
-    return (await this.execRepository).update(id, dataset);
+    const updatedData = { ...dataset };
+
+    if (dataset.productQty) {
+      const purchaseProduct = await this.getPurchaseProductById(id);
+      if (!purchaseProduct) {
+        throw new Error("Purchase Product not found");
+      }
+
+      const product = await this.productService.getProductById(
+        purchaseProduct.product.id
+      );
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      updatedData.totalPrice = dataset.productQty * product.price;
+    }
+
+    return (await this.execRepository).update(id, updatedData);
   }
 }

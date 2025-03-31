@@ -14,21 +14,21 @@ export class ProductRouter extends BaseRouter<
     this.router.get("/products", (req, res) =>
       this.controller.getProducts(req, res)
     );
-    this.router.get("/product/:id", (req, res) =>
+    this.router.get("/products/:id", (req, res) =>
       this.controller.getProductById(req, res)
     );
-    this.router.get("/productRel/:id", (req, res) =>
+    this.router.get("/products/rel/:id", (req, res) =>
       this.controller.getProductWithRelationById(req, res)
     );
     this.router.post(
-      "/createProduct",
+      "/products",
       (req, res, next) => this.middleware.productValidator(req, res, next),
       (req, res) => this.controller.createProduct(req, res)
     );
-    this.router.put("/updateProduct/:id", (req, res) =>
+    this.router.patch("/products/:id", (req, res) =>
       this.controller.updateProduct(req, res)
     );
-    this.router.delete("/deleteProduct/:id", (req, res) =>
+    this.router.delete("/products/:id", (req, res) =>
       this.controller.deleteProduct(req, res)
     );
   }

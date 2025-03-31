@@ -4,15 +4,15 @@ import { PurchaseEntity } from "../entities/purchase.entity";
 import { ProductEntity } from "../../product/entities/product.entity";
 
 export class PurchaseProductDTO extends BaseDTO {
+  @IsOptional()
+  totalPrice?: number;
+
   @IsNotEmpty()
-  totalPrice!: number;
+  productQty!: number;
 
-  @IsOptional()
-  productQty?: number;
+  @IsNotEmpty()
+  purchaseId!: string;
 
-  @IsOptional()
-  purchase?: PurchaseEntity;
-
-  @IsOptional()
-  product?: ProductEntity;
+  @IsNotEmpty()
+  productId!: string;
 }

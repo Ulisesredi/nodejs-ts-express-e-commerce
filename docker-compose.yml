@@ -14,17 +14,17 @@ services:
       MYSQL_PASSWORD: secret_pwd
       MYSQL_ROOT_PASSWORD: secret_pwd
 
-  api:
-    build: .
-    container_name: node_ts_express_api
-    restart: always
-    depends_on:
-      - node_ts_express_db
-    environment:
-      DB_HOST: node_ts_express_api_msql_db
-      DB_PORT: 3306
-      DB_USER: user
-      DB_PASSWORD: secret_pwd
-      DB_DATABASE: node_ts_express_api_msql_db
-    ports:
-      - "8000:8000"
+  # api:
+  #   build: .
+  #   container_name: node_ts_express_api
+  #   restart: always
+  #   depends_on:
+  #     - node_ts_express_db
+  #   environment:
+  #     DB_HOST: node_ts_express_api_msql_db
+  #     DB_PORT: 3306
+  #     DB_USER: user
+  #     DB_PASSWORD: secret_pwd
+  #     DB_DATABASE: node_ts_express_api_msql_db
+  #   ports:
+  #     - "8000:8000"

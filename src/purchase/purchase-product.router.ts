@@ -14,19 +14,19 @@ export class PurchaseProductRouter extends BaseRouter<
     this.router.get("/purchaseProducts", (req, res) =>
       this.controller.getPurchaseProducts(req, res)
     );
-    this.router.get("/purchaseProduct/:id", (req, res) =>
+    this.router.get("/purchaseProducts/:id", (req, res) =>
       this.controller.getPurchaseProductById(req, res)
     );
     this.router.post(
-      "/createPurchaseProduct",
+      "/purchaseProducts",
       (req, res, next) =>
         this.middleware.purchaseProductValidator(req, res, next),
       (req, res) => this.controller.createPurchaseProduct(req, res)
     );
-    this.router.put("/updatePurchaseProduct/:id", (req, res) =>
+    this.router.patch("/purchaseProducts/:id", (req, res) =>
       this.controller.updatePurchaseProduct(req, res)
     );
-    this.router.delete("/deletePurchaseProduct/:id", (req, res) =>
+    this.router.delete("/purchaseProducts/:id", (req, res) =>
       this.controller.deletePurchaseProduct(req, res)
     );
   }
